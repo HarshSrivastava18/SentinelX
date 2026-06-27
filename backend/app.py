@@ -25,5 +25,14 @@ def health():
         "version": "1.0.0"
     })
 
+@app.route("/dashboard")
+def dashboard():
+    return jsonify({
+        "totalLogs": 1254,
+        "alerts": 12,
+        "hosts": 8,
+        "status": "Online"
+    })
+
 if __name__ == "__main__":
     app.run(debug=True)
