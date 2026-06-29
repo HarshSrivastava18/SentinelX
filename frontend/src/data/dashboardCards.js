@@ -1,57 +1,35 @@
-import StatusCard from "./StatusCard";
+import {
+  FileText,
+  TriangleAlert,
+  Server,
+  Activity,
+} from "lucide-react";
 
-function DashboardGrid({ stats }) {
+const dashboardCards = [
+  {
+    id: 1,
+    title: "Total Logs",
+    icon: FileText,
+    color: "text-cyan-400",
+  },
+  {
+    id: 2,
+    title: "Alerts",
+    icon: TriangleAlert,
+    color: "text-red-400",
+  },
+  {
+    id: 3,
+    title: "Hosts",
+    icon: Server,
+    color: "text-green-400",
+  },
+  {
+    id: 4,
+    title: "Backend",
+    icon: Activity,
+    color: "text-purple-400",
+  },
+];
 
-    const cards = [
-
-        {
-            id: 1,
-            title: "Total Logs",
-            value: stats.totalLogs,
-        },
-
-        {
-            id: 2,
-            title: "Alerts",
-            value: stats.alerts,
-        },
-
-        {
-            id: 3,
-            title: "Hosts",
-            value: stats.hosts,
-        },
-
-        {
-            id: 4,
-            title: "Backend",
-            value: stats.status,
-        }
-
-    ];
-
-    return (
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-
-            {cards.map((card) => (
-
-                <StatusCard
-
-                    key={card.id}
-
-                    title={card.title}
-
-                    value={card.value}
-
-                />
-
-            ))}
-
-        </div>
-
-    );
-
-}
-
-export default DashboardGrid;
+export default dashboardCards;
