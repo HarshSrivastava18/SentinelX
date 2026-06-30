@@ -1,38 +1,18 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
 
+from routes.dashboard import dashboard_bp
+from routes.logs import logs_bp
 app = Flask(__name__)
 
-# Allow only the React development server
-CORS(
-    app,
-    resources={
-        r"/*": {
-            "origins": "http://localhost:5173"
-        }
-    }
-)
+CORS(app)
+
+app.register_blueprint(logs_bp)
+app.register_blueprint(dashboard_bp)
 
 @app.route("/")
 def home():
-    return "🚀 Welcome to SentinelX Backend!"
-
-@app.route("/health")
-def health():
-    return jsonify({
-        "status": "OK",
-        "message": "Backend is running successfully!",
-        "version": "1.0.0"
-    })
-
-@app.route("/dashboard")
-def dashboard():
-    return jsonify({
-        "totalLogs": 1254,
-        "alerts": 12,
-        "hosts": 8,
-        "status": "Online"
-    })
+    return "🚀 SentinelX Backend"
 
 if __name__ == "__main__":
     app.run(debug=True)

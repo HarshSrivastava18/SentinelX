@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import LogChart from "../components/dashboard/LogChart";
 import DashboardGrid from "../components/dashboard/DashboardGrid";
 import RecentLogs from "../components/dashboard/RecentLogs";
 
@@ -56,6 +56,8 @@ function Dashboard() {
             </h1>
 
             <DashboardGrid stats={stats} />
+
+              <LogChart />
 
             <RecentLogs />
         </>
