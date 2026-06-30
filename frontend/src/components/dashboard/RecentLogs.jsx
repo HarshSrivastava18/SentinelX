@@ -1,29 +1,58 @@
-import { useState } from "react";
-import mockLogs from "../../data/mockLogs";
+import { useState, useEffect } from "react";
+import { getLogs } from "../../services/logService";
 import SeverityBadge from "./SeverityBadge";
 function RecentLogs() {
   const [search, setSearch] = useState("");
-  const filteredLogs = mockLogs.filter((log) => {
-  const query = search.toLowerCase();
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+ async function loadLogs() {
+  try {
+    const data = await getLogs();
+    setLogs(data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+}
 
+  loadLogs();
+}, []);
+  const filteredLogs = logs.filter((log) => {
+    const query = search.toLowerCase();
+
+    return (
+      log.source.toLowerCase().includes(query) ||
+      log.severity.toLowerCase().includes(query) ||
+      log.message.toLowerCase().includes(query)
+    );
+  });
+  if (loading) {
   return (
-    log.source.toLowerCase().includes(query) ||
-    log.severity.toLowerCase().includes(query) ||
-    log.message.toLowerCase().includes(query)
+    <div className="mt-8 bg-slate-900 rounded-xl p-6 border border-slate-800">
+      <h2 className="text-xl font-bold text-white">
+        Recent Security Logs
+      </h2>
+
+      <p className="text-slate-400 mt-4">
+        Loading logs...
+      </p>
+    </div>
   );
-});
+}
   return (
     <div className="mt-8 bg-slate-900 rounded-xl p-6 border border-slate-800">
       <h2 className="text-xl font-bold mb-4 text-white">
         Recent Security Logs
       </h2>
       <div className="mb-6">
-  <input
-    type="text"
-    placeholder="🔍 Search by source, severity or message..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="
+        <input
+          type="text"
+          placeholder="🔍 Search by source, severity or message..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="
       w-full
       bg-slate-800
       border
@@ -36,8 +65,8 @@ function RecentLogs() {
       focus:outline-none
       focus:border-cyan-500
     "
-  />
-</div>
+        />
+      </div>
 
       <table className="w-full text-left">
         <thead>
@@ -61,34 +90,34 @@ function RecentLogs() {
         </thead>
 
         <tbody>
-  {filteredLogs.length === 0 ? (
-    <tr>
-      <td
-        colSpan="4"
-        className="text-center py-8 text-slate-500"
-      >
-        No matching logs found.
-      </td>
-    </tr>
-  ) : (
-    filteredLogs.map((log) => (
-      <tr
-        key={log.id}
-        className="hover:bg-slate-800/50 transition-colors"
-      >
-        <td className="py-4">{log.time}</td>
+          {filteredLogs.length === 0 ? (
+            <tr>
+              <td
+                colSpan="4"
+                className="text-center py-8 text-slate-500"
+              >
+                No matching logs found.
+              </td>
+            </tr>
+          ) : (
+            filteredLogs.map((log) => (
+              <tr
+                key={log.id}
+                className="hover:bg-slate-800/50 transition-colors"
+              >
+                <td className="py-4">{log.time}</td>
 
-        <td className="py-4">
-          <SeverityBadge severity={log.severity} />
-        </td>
+                <td className="py-4">
+                  <SeverityBadge severity={log.severity} />
+                </td>
 
-        <td className="py-4">{log.source}</td>
+                <td className="py-4">{log.source}</td>
 
-        <td className="py-4">{log.message}</td>
-      </tr>
-    ))
-  )}
-</tbody>
+                <td className="py-4">{log.message}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
       </table>
     </div>
   );
