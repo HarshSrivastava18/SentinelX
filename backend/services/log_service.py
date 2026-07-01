@@ -33,3 +33,32 @@ def get_logs():
     finally:
         cursor.close()
         conn.close()
+
+
+# -----------------------------
+# NEW FUNCTION
+# -----------------------------
+
+def create_log(data):
+    conn = get_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO logs (severity, source, message)
+            VALUES (%s, %s, %s)
+            """,
+            (
+                data["severity"],
+                data["source"],
+                data["message"],
+            )
+        )
+
+        conn.commit()
+
+    finally:
+        cursor.close()
+        conn.close()
